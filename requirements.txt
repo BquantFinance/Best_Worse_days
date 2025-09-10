@@ -3,3 +3,4 @@ yfinance
 matplotlib
 seaborn
 streamlit
+plotly
