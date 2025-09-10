@@ -1,5 +1,5 @@
 pandas
-yfinance==2.0.65
+yfinance==0.2.65
 matplotlib
 seaborn
 streamlit
