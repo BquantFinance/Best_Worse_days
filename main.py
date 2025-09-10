@@ -496,10 +496,21 @@ with tab1:
         y_axis_config['title'] = 'Retorno Acumulado (%, escala log)'
     
     fig.update_layout(
-        **plotly_layout,
-        title=f'{ticker} - Impacto de Perder los Mejores/Peores Días',
-        xaxis_title='Fecha',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#ffffff', family='Inter'),
+        xaxis=dict(
+            title='Fecha',
+            gridcolor='rgba(255,255,255,0.05)',
+            zerolinecolor='rgba(255,255,255,0.1)'
+        ),
         yaxis=y_axis_config,
+        hoverlabel=dict(
+            bgcolor='#1a1f2e',
+            font_size=14,
+            font_family='Inter'
+        ),
+        title=f'{ticker} - Impacto de Perder los Mejores/Peores Días',
         height=500,
         showlegend=True,
         legend=dict(
