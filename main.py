@@ -186,7 +186,7 @@ initial_investment = st.sidebar.number_input(
 @st.cache_data(ttl=3600)
 def load_data(ticker, start, end):
     try:
-        data = yf.download(ticker, start=start, end=end, progress=False)
+        data = yf.download(ticker, start=start, end=end, progress=False, multi_level_index=False)
         if data.empty:
             return None
         
