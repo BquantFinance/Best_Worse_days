@@ -800,146 +800,25 @@ with tab3:
         price_axis_config['title'] = 'Precio ($, escala log)'
     
     fig_price.update_layout(
-        **plotly_layout,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#ffffff', family='Inter'),
+        xaxis=dict(
+            gridcolor='rgba(255,255,255,0.05)',
+            zerolinecolor='rgba(255,255,255,0.1)'
+        ),
+        yaxis=price_axis_config,
+        hoverlabel=dict(
+            bgcolor='#1a1f2e',
+            font_size=14,
+            font_family='Inter'
+        ),
         title=f'{ticker} Precio con Días Extremos',
         xaxis_title='Fecha',
-        yaxis=price_axis_config,
         height=500
     )
     
     st.plotly_chart(fig_price, use_container_width=True)
-
-with tab4:
-    st.subheader("Análisis de Patrones")
-    
-    # Proximity analysis
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("### Análisis de Agrupamiento")
-        
-        if len(best_days_subset) > 0 and len(worst_days_subset) > 0:
-            proximity_windows = [5, 10, 20, 30]
-            proximity_counts = []
-            
-            for window in proximity_windows:
-                count = 0
-                for best_date in best_days_subset.index:
-                    for worst_date in worst_days_subset.index:
-                        if abs((best_date - worst_date).days) <= window:
-                            count += 1
-                            break
-                proximity_counts.append(count)
-            
-            proximity_df = pd.DataFrame({
-                'Ventana (días)': proximity_windows,
-                'Mejores Cerca de Peores': proximity_counts,
-                'Porcentaje': [c/len(best_days_subset)*100 for c in proximity_counts]
-            })
-            
-            fig_prox = px.bar(
-                proximity_df,
-                x='Ventana (días)',
-                y='Porcentaje',
-                text='Porcentaje',
-                title='% de Mejores Días Cerca de Peores'
-            )
-            fig_prox.update_traces(
-                marker_color='#9f7aea',
-                texttemplate='%{text:.1f}%',
-                textposition='outside'
-            )
-            fig_prox.update_layout(**plotly_layout, height=350)
-            st.plotly_chart(fig_prox, use_container_width=True)
-        else:
-            st.info("Seleccione días a excluir para ver análisis de agrupamiento")
-    
-    with col2:
-        st.markdown("### Análisis de Volatilidad")
-        
-        try:
-            valid_best = best_days_subset.index.intersection(data.index)
-            valid_worst = worst_days_subset.index.intersection(data.index)
-            
-            if len(valid_best) > 0 and len(valid_worst) > 0:
-                avg_vol = data['Volatility_20'].mean() * 100 if 'Volatility_20' in data.columns else 20
-                best_vol = data.loc[valid_best, 'Volatility_20'].mean() * 100
-                worst_vol = data.loc[valid_worst, 'Volatility_20'].mean() * 100
-                
-                vol_comparison = pd.DataFrame({
-                    'Período': ['Promedio', 'Mejores Días', 'Peores Días'],
-                    'Volatilidad (%)': [avg_vol, best_vol, worst_vol]
-                })
-                
-                fig_vol = px.bar(
-                    vol_comparison,
-                    x='Período',
-                    y='Volatilidad (%)',
-                    color='Período',
-                    color_discrete_map={'Promedio': '#667eea', 'Mejores Días': '#48bb78', 'Peores Días': '#f56565'},
-                    title='Comparación de Volatilidad'
-                )
-                fig_vol.update_layout(**plotly_layout, showlegend=False, height=350)
-                st.plotly_chart(fig_vol, use_container_width=True)
-        except:
-            st.info("No hay suficientes datos para análisis de volatilidad")
-    
-    # Day of week analysis
-    st.markdown("### Patrones por Día de la Semana")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if len(best_days_subset) > 0:
-            best_dow = best_days_subset.index.day_name().value_counts()
-            day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-            day_names_es = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-            
-            if 'Saturday' not in best_dow and 'Sunday' not in best_dow:
-                day_order = day_order[:5]
-                day_names_es = day_names_es[:5]
-            
-            best_dow = best_dow.reindex(day_order, fill_value=0)
-            
-            fig_dow_best = px.bar(
-                x=day_names_es,
-                y=best_dow.values,
-                labels={'x': 'Día', 'y': 'Cantidad'},
-                title='Mejores Días por Día de la Semana'
-            )
-            fig_dow_best.update_traces(marker_color='#48bb78')
-            fig_dow_best.update_layout(**plotly_layout, height=300)
-            st.plotly_chart(fig_dow_best, use_container_width=True)
-    
-    with col2:
-        if len(worst_days_subset) > 0:
-            worst_dow = worst_days_subset.index.day_name().value_counts()
-            worst_dow = worst_dow.reindex(day_order, fill_value=0)
-            
-            fig_dow_worst = px.bar(
-                x=day_names_es,
-                y=worst_dow.values,
-                labels={'x': 'Día', 'y': 'Cantidad'},
-                title='Peores Días por Día de la Semana'
-            )
-            fig_dow_worst.update_traces(marker_color='#f56565')
-            fig_dow_worst.update_layout(**plotly_layout, height=300)
-            st.plotly_chart(fig_dow_worst, use_container_width=True)
-    
-    # Additional insights
-    st.markdown("""
-    <div class="insight-box">
-        <h3 style="color: #667eea; margin-top: 0;">🔍 ¿Por Qué se Agrupan los Días Extremos?</h3>
-        <p style="color: #a0a0a0;">
-            <b style="color: #ffffff;">Psicología del Mercado:</b> El miedo y la codicia se alimentan mutuamente<br>
-            <b style="color: #ffffff;">Persistencia de Volatilidad:</b> Los períodos de alta volatilidad tienden a continuar<br>
-            <b style="color: #ffffff;">Ventas/Compras Forzadas:</b> Las llamadas de margen y coberturas de cortos crean cascadas<br>
-            <b style="color: #ffffff;">Resolución de Incertidumbre:</b> Los mercados sobrereaccionan y luego se corrigen rápidamente<br><br>
-            Este agrupamiento hace que el timing del mercado sea casi imposible: si sales durante una caída, 
-            es probable que te pierdas el poderoso rebote que a menudo sigue inmediatamente.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
 
 # Summary section
 st.markdown("---")
