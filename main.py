@@ -16,99 +16,327 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Dark theme custom CSS
+# Enhanced dark theme CSS with animations and glassmorphism
 st.markdown("""
     <style>
-    /* Dark theme base */
+    /* Import fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+    
+    /* Dark theme base with animated gradient */
     .stApp {
-        background: linear-gradient(180deg, #0e1117 0%, #1a1f2e 100%);
+        background: linear-gradient(-45deg, #0e1117, #1a1f2e, #0e1117, #2d1b69);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
     }
     
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
     
+    /* All text uses Inter */
     * {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
+    /* Main header with animated gradient */
     .main-header {
-        font-size: 42px;
-        font-weight: 800;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-size: 56px;
+        font-weight: 900;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%);
+        background-size: 200% 200%;
+        animation: gradientFlow 3s ease infinite;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: 10px;
+        letter-spacing: -1px;
+        text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+    }
+    
+    @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
     .sub-header {
-        font-size: 18px;
+        font-size: 20px;
         color: #a0a0a0;
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        font-weight: 300;
+        letter-spacing: 0.5px;
     }
     
+    /* Glassmorphism metric cards */
     .metric-card {
-        background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
-        border: 1px solid rgba(102, 126, 234, 0.1);
-        border-radius: 16px;
-        padding: 20px;
+        background: linear-gradient(135deg, rgba(26, 31, 46, 0.7) 0%, rgba(45, 55, 72, 0.7) 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 20px;
+        padding: 24px;
         margin: 10px 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        position: relative;
+        overflow: hidden;
     }
     
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        transition: left 0.5s;
+    }
+    
+    .metric-card:hover::before {
+        left: 100%;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        border-color: rgba(102, 126, 234, 0.5);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Animated insight boxes */
     .insight-box {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        border-left: 4px solid #667eea;
-        border-radius: 12px;
-        padding: 20px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        backdrop-filter: blur(10px);
+        border-left: 4px solid;
+        border-image: linear-gradient(45deg, #667eea, #764ba2) 1;
+        border-radius: 16px;
+        padding: 24px;
         margin: 20px 0;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+        position: relative;
+        animation: slideInLeft 0.5s ease-out;
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
     
     .warning-box {
-        background: linear-gradient(135deg, rgba(245, 101, 101, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
-        border-left: 4px solid #f56565;
-        border-radius: 12px;
-        padding: 20px;
+        background: linear-gradient(135deg, rgba(245, 101, 101, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+        backdrop-filter: blur(10px);
+        border-left: 4px solid;
+        border-image: linear-gradient(45deg, #f56565, #ec4899) 1;
+        border-radius: 16px;
+        padding: 24px;
         margin: 20px 0;
+        box-shadow: 0 4px 20px rgba(245, 101, 101, 0.2);
+        animation: slideInRight 0.5s ease-out;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
     
     .success-box {
-        background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 178, 172, 0.1) 100%);
-        border-left: 4px solid #48bb78;
-        border-radius: 12px;
-        padding: 20px;
+        background: linear-gradient(135deg, rgba(72, 187, 120, 0.15) 0%, rgba(56, 178, 172, 0.15) 100%);
+        backdrop-filter: blur(10px);
+        border-left: 4px solid;
+        border-image: linear-gradient(45deg, #48bb78, #38b2ac) 1;
+        border-radius: 16px;
+        padding: 24px;
         margin: 20px 0;
+        box-shadow: 0 4px 20px rgba(72, 187, 120, 0.2);
+        animation: fadeInUp 0.5s ease-out;
     }
     
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Enhanced metrics display */
+    [data-testid="metric-container"] {
+        background: linear-gradient(135deg, rgba(26, 31, 46, 0.8) 0%, rgba(45, 55, 72, 0.8) 100%);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 16px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    [data-testid="metric-container"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+        border-color: rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Glowing tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        background: transparent;
+        gap: 12px;
+        padding: 10px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: rgba(30, 35, 48, 0.6);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        color: #a0a0a0;
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        transition: all 0.3s ease;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(102, 126, 234, 0.15);
+        border-color: rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%);
+        border-color: #667eea !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Enhanced sidebar */
+    .css-1d391kg {
+        background: linear-gradient(180deg, rgba(14, 17, 23, 0.95) 0%, rgba(26, 31, 46, 0.95) 100%);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Glowing buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 24px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+    }
+    
+    /* Enhanced selectbox */
+    .stSelectbox > div > div {
+        background: rgba(30, 35, 48, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .stSelectbox > div > div:hover {
+        border-color: rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+    
+    /* Enhanced slider */
+    .stSlider > div > div {
+        background: transparent;
+    }
+    
+    .stSlider > div > div > div {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+    
+    /* Footer styling */
     .footer {
         text-align: center;
         color: #a0a0a0;
-        margin-top: 40px;
-        padding: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 60px;
+        padding: 30px;
+        border-top: 1px solid rgba(102, 126, 234, 0.2);
+        background: linear-gradient(135deg, rgba(26, 31, 46, 0.5) 0%, rgba(45, 55, 72, 0.5) 100%);
+        backdrop-filter: blur(10px);
+        border-radius: 20px 20px 0 0;
     }
     
     .footer a {
         color: #667eea;
         text-decoration: none;
         font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .footer a:hover {
+        color: #764ba2;
+        text-shadow: 0 0 10px rgba(118, 75, 162, 0.5);
+    }
+    
+    /* Number formatting with monospace font */
+    .metric-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 36px;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Pulse animation for important numbers */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .pulse {
+        animation: pulse 2s infinite;
     }
     
     /* Hide Streamlit branding */
     #MainMenu {visibility: hidden;}
     .stDeployButton {display:none;}
     footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# Header
+# Header with enhanced animation
 st.markdown('<h1 class="main-header">Tiempo en el Mercado vs Timing del Mercado</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">Analizando el impacto de perder los mejores y peores días de trading</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">✨ Analizando el impacto de perder los mejores y peores días de trading</p>', unsafe_allow_html=True)
 
-# Sidebar configuration
-st.sidebar.markdown("## ⚙️ Configuración")
+# Sidebar configuration with better organization
+st.sidebar.markdown("## ⚙️ **Configuración**")
+st.sidebar.markdown("---")
 
 # Ticker selection
-ticker_type = st.sidebar.radio("Tipo de ticker:", ["ETFs de Índices", "Personalizado"])
+st.sidebar.markdown("### 📊 **Selección de Activo**")
+ticker_type = st.sidebar.radio("Tipo de ticker:", ["ETFs de Índices", "Personalizado"], label_visibility="collapsed")
 
 if ticker_type == "ETFs de Índices":
     ticker = st.sidebar.selectbox(
@@ -121,6 +349,7 @@ else:
     ticker = st.sidebar.text_input("Ingrese símbolo del ticker:", value="AAPL").upper()
 
 # Date range
+st.sidebar.markdown("### 📅 **Período de Análisis**")
 col1, col2 = st.sidebar.columns(2)
 with col1:
     start_date = st.date_input(
@@ -138,62 +367,68 @@ with col2:
 
 # Validate date range
 if start_date >= end_date:
-    st.sidebar.error("La fecha final debe ser posterior a la fecha inicial")
+    st.sidebar.error("⚠️ La fecha final debe ser posterior a la fecha inicial")
     st.stop()
 
 # Days to exclude
-st.sidebar.markdown("### Días a Excluir")
+st.sidebar.markdown("### 🎯 **Días a Excluir**")
 exclude_best = st.sidebar.slider(
-    "Mejores días a perder:",
+    "🟢 Mejores días a perder:",
     min_value=0,
     max_value=50,
     value=10,
-    step=1
+    step=1,
+    help="Número de mejores días que se perderían al intentar hacer timing del mercado"
 )
 
 exclude_worst = st.sidebar.slider(
-    "Peores días a perder:",
+    "🔴 Peores días a evitar:",
     min_value=0,
     max_value=50,
     value=10,
-    step=1
+    step=1,
+    help="Número de peores días que se evitarían con timing perfecto (imposible en la práctica)"
 )
 
 # Chart settings
-st.sidebar.markdown("### Configuración de Gráficos")
+st.sidebar.markdown("### 📈 **Configuración de Gráficos**")
 scale_type = st.sidebar.radio(
     "Escala del eje Y:",
     ["Lineal", "Logarítmica"],
-    index=0
+    index=0,
+    help="La escala logarítmica es útil para visualizar cambios porcentuales en períodos largos"
 )
 
 # Technical indicators
-st.sidebar.markdown("### Análisis Técnico")
+st.sidebar.markdown("### 📉 **Indicadores Técnicos**")
 show_ma = st.sidebar.checkbox("Mostrar Medias Móviles", value=True)
 ma_periods = []
 if show_ma:
     ma_periods = st.sidebar.multiselect(
         "Períodos MA:",
         [20, 50, 100, 200],
-        default=[50, 200]
+        default=[50, 200],
+        help="Medias móviles simples para análisis de tendencia"
     )
 
 # Initial investment
+st.sidebar.markdown("### 💰 **Inversión**")
 initial_investment = st.sidebar.number_input(
     "Inversión inicial ($):",
     min_value=1000,
     max_value=1000000,
     value=10000,
-    step=1000
+    step=1000,
+    help="Monto inicial para calcular el impacto en dólares"
 )
 
-# Load data function
+# Load data function with rate limit protection
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_data(ticker, start, end):
-    """Load and prepare market data from yfinance"""
+    """Carga y prepara datos del mercado desde yfinance"""
     import time
     
-    # Add minimum delay between any yfinance calls
+    # Add minimum delay between yfinance calls
     time.sleep(0.5)
     
     max_retries = 3
@@ -284,7 +519,7 @@ def load_data(ticker, start, end):
     
     return None
 
-# Plotly dark theme
+# Plotly dark theme configuration
 plotly_layout = dict(
     plot_bgcolor='rgba(0,0,0,0)',
     paper_bgcolor='rgba(0,0,0,0)',
@@ -305,7 +540,7 @@ plotly_layout = dict(
 )
 
 # Load data
-with st.spinner(f'Cargando datos de mercado para {ticker}...'):
+with st.spinner(f'🔄 Cargando datos de mercado para {ticker}...'):
     data = load_data(ticker, start_date, end_date)
 
 if data is None or data.empty:
@@ -328,7 +563,7 @@ if 'Close' not in data.columns or 'Daily_Return' not in data.columns:
 returns = data['Daily_Return'].dropna()
 
 if len(returns) < 100:
-    st.warning("No hay suficientes puntos de datos para un análisis significativo. Seleccione un rango de fechas más largo.")
+    st.warning("⚠️ No hay suficientes puntos de datos para un análisis significativo. Seleccione un rango de fechas más largo.")
     st.stop()
 
 sorted_returns = returns.sort_values(ascending=False)
@@ -373,7 +608,8 @@ for name, rets in scenarios.items():
 total_days = len(returns)
 years = max((pd.to_datetime(end_date) - pd.to_datetime(start_date)).days / 365.25, 0.1)
 
-# Display metrics
+# Display metrics with enhanced styling
+st.markdown("### 📊 **Métricas Clave**")
 col1, col2, col3, col4 = st.columns(4)
 
 buy_hold_return = final_returns.get('Comprar y Mantener', 0)
@@ -382,7 +618,7 @@ buy_hold_value = dollar_scenarios.get('Comprar y Mantener', pd.Series([initial_i
 with col1:
     annualized = ((1 + buy_hold_return/100) ** (1/years) - 1) * 100 if years > 0 else 0
     st.metric(
-        "Comprar y Mantener",
+        "🏆 Comprar y Mantener",
         f"${buy_hold_value:,.0f}",
         f"+{buy_hold_return:.1f}% ({annualized:.1f}% anual)"
     )
@@ -393,7 +629,7 @@ with col2:
         miss_best_value = dollar_scenarios[f'Perdiendo {exclude_best} Mejores Días'].iloc[-1]
         diff = miss_best_return - buy_hold_return
         st.metric(
-            f"Sin {exclude_best} Mejores",
+            f"😔 Sin {exclude_best} Mejores",
             f"${miss_best_value:,.0f}",
             f"{diff:.1f}%",
             delta_color="inverse"
@@ -411,7 +647,7 @@ with col3:
         miss_worst_value = dollar_scenarios[f'Perdiendo {exclude_worst} Peores Días'].iloc[-1]
         diff = miss_worst_return - buy_hold_return
         st.metric(
-            f"Sin {exclude_worst} Peores",
+            f"🎯 Sin {exclude_worst} Peores",
             f"${miss_worst_value:,.0f}",
             f"+{diff:.1f}%",
             delta_color="normal"
@@ -425,21 +661,20 @@ with col3:
 
 with col4:
     st.metric(
-        "Días de Trading",
+        "📅 Días de Trading",
         f"{total_days:,}",
         f"{years:.1f} años"
     )
 
-# Create tabs
-tab1, tab2, tab3, tab4 = st.tabs([
+# Create tabs with icons
+tab1, tab2, tab3 = st.tabs([
     "📈 Retornos Acumulados",
     "📊 Línea de Tiempo", 
-    "📉 Análisis Técnico",
-    "📅 Análisis de Patrones"
+    "📉 Análisis Técnico"
 ])
 
 with tab1:
-    st.subheader("Comparación de Retornos Acumulados")
+    st.subheader("📈 Comparación de Retornos Acumulados")
     
     # Create main chart
     fig = go.Figure()
@@ -458,7 +693,7 @@ with tab1:
             y=(cumulative - 1) * 100,
             mode='lines',
             name=name,
-            line=dict(color=color, width=2.5 if 'Comprar y Mantener' in name else 2),
+            line=dict(color=color, width=3 if 'Comprar y Mantener' in name else 2.5),
             hovertemplate='<b>%{fullData.name}</b><br>Fecha: %{x}<br>Retorno: %{y:.2f}%<extra></extra>'
         ))
     
@@ -488,8 +723,7 @@ with tab1:
     )
     
     if scale_type == 'Logarítmica':
-        # For log scale, we need to shift values to be positive
-        # Add 100 to percentage returns (so 0% return becomes 100)
+        # For log scale, shift values to be positive
         for trace in fig.data:
             trace.y = [y + 100 for y in trace.y]
         y_axis_config['type'] = 'log'
@@ -510,20 +744,26 @@ with tab1:
             font_size=14,
             font_family='Inter'
         ),
-        title=f'{ticker} - Impacto de Perder los Mejores/Peores Días',
+        title=dict(
+            text=f'<b>{ticker}</b> - Impacto de Perder los Mejores/Peores Días',
+            font=dict(size=24, color='#ffffff'),
+            x=0.5,
+            xanchor='center'
+        ),
         height=500,
         showlegend=True,
         legend=dict(
             bgcolor='rgba(26, 31, 46, 0.8)',
             bordercolor='rgba(102, 126, 234, 0.2)',
-            borderwidth=1
+            borderwidth=1,
+            font=dict(size=12)
         ),
         hovermode='x unified'
     )
     
     st.plotly_chart(fig, use_container_width=True)
     
-    # Summary table - simplified without opportunity cost box
+    # Summary table
     st.subheader("📊 Resumen de Estrategias")
     
     summary_data = []
@@ -542,10 +782,10 @@ with tab1:
     
     if summary_data:
         summary_df = pd.DataFrame(summary_data)
-        st.dataframe(summary_df.round(2), use_container_width=True)
+        st.dataframe(summary_df.round(2), use_container_width=True, height=180)
 
 with tab2:
-    st.subheader("Distribución de los Mejores y Peores Días en el Tiempo")
+    st.subheader("📊 Distribución de los Mejores y Peores Días en el Tiempo")
     
     # Timeline scatter plot
     fig_dist = go.Figure()
@@ -554,32 +794,36 @@ with tab2:
     fig_dist.add_trace(go.Scatter(
         x=best_days[:exclude_best].index if exclude_best > 0 else best_days[:20].index,
         y=(best_days[:exclude_best] if exclude_best > 0 else best_days[:20]).values * 100,
-        mode='markers',
+        mode='markers+text',
         name='Mejores Días',
         marker=dict(
             color='#48bb78',
-            size=12,
+            size=14,
             symbol='triangle-up',
             line=dict(color='#ffffff', width=1)
         ),
         text=[f"#{i+1}" for i in range(min(exclude_best if exclude_best > 0 else 20, len(best_days)))],
-        hovertemplate='<b>Mejor Día %{text}</b><br>Fecha: %{x}<br>Retorno: %{y:.2f}%<extra></extra>'
+        textposition="top center",
+        textfont=dict(size=9, color='#48bb78'),
+        hovertemplate='<b>Mejor Día #%{text}</b><br>Fecha: %{x}<br>Retorno: %{y:.2f}%<extra></extra>'
     ))
     
     # Add worst days
     fig_dist.add_trace(go.Scatter(
         x=worst_days[:exclude_worst].index if exclude_worst > 0 else worst_days[:20].index,
         y=(worst_days[:exclude_worst] if exclude_worst > 0 else worst_days[:20]).values * 100,
-        mode='markers',
+        mode='markers+text',
         name='Peores Días',
         marker=dict(
             color='#f56565',
-            size=12,
+            size=14,
             symbol='triangle-down',
             line=dict(color='#ffffff', width=1)
         ),
         text=[f"#{i+1}" for i in range(min(exclude_worst if exclude_worst > 0 else 20, len(worst_days)))],
-        hovertemplate='<b>Peor Día %{text}</b><br>Fecha: %{x}<br>Retorno: %{y:.2f}%<extra></extra>'
+        textposition="bottom center",
+        textfont=dict(size=9, color='#f56565'),
+        hovertemplate='<b>Peor Día #%{text}</b><br>Fecha: %{x}<br>Retorno: %{y:.2f}%<extra></extra>'
     ))
     
     # Add zero line
@@ -590,6 +834,7 @@ with tab2:
         ('2000-03-01', '2002-10-01', 'Burbuja puntocom'),
         ('2007-10-01', '2009-03-01', 'Crisis 2008'),
         ('2020-02-01', '2020-04-01', 'COVID-19'),
+        ('2022-01-01', '2022-06-01', 'Inflación/Guerra')
     ]
     
     for start, end, name in crisis_periods:
@@ -606,12 +851,37 @@ with tab2:
             )
     
     fig_dist.update_layout(
-        **plotly_layout,
-        title='Distribución de Días Extremos',
-        xaxis_title='Fecha',
-        yaxis_title='Retorno Diario (%)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#ffffff', family='Inter'),
+        xaxis=dict(
+            title='Fecha',
+            gridcolor='rgba(255,255,255,0.05)',
+            zerolinecolor='rgba(255,255,255,0.1)'
+        ),
+        yaxis=dict(
+            title='Retorno Diario (%)',
+            gridcolor='rgba(255,255,255,0.05)',
+            zerolinecolor='rgba(255,255,255,0.1)'
+        ),
+        title=dict(
+            text='<b>Distribución de Días Extremos</b>',
+            font=dict(size=20, color='#ffffff'),
+            x=0.5,
+            xanchor='center'
+        ),
         height=450,
-        showlegend=True
+        showlegend=True,
+        legend=dict(
+            bgcolor='rgba(26, 31, 46, 0.8)',
+            bordercolor='rgba(102, 126, 234, 0.2)',
+            borderwidth=1
+        ),
+        hoverlabel=dict(
+            bgcolor='#1a1f2e',
+            font_size=14,
+            font_family='Inter'
+        )
     )
     
     st.plotly_chart(fig_dist, use_container_width=True)
@@ -627,7 +897,7 @@ with tab2:
                 x=best_years.index,
                 y=best_years.values,
                 labels={'x': 'Año', 'y': 'Cantidad'},
-                title='Mejores Días por Año'
+                title='🟢 Mejores Días por Año'
             )
             fig_best.update_traces(marker_color='#48bb78')
             fig_best.update_layout(**plotly_layout, height=300)
@@ -641,14 +911,14 @@ with tab2:
                 x=worst_years.index,
                 y=worst_years.values,
                 labels={'x': 'Año', 'y': 'Cantidad'},
-                title='Peores Días por Año'
+                title='🔴 Peores Días por Año'
             )
             fig_worst.update_traces(marker_color='#f56565')
             fig_worst.update_layout(**plotly_layout, height=300)
             st.plotly_chart(fig_worst, use_container_width=True)
 
 with tab3:
-    st.subheader("Análisis Técnico de Días Extremos")
+    st.subheader("📉 Análisis Técnico de Días Extremos")
     
     # Check position relative to moving averages
     best_days_subset = best_days[:exclude_best] if exclude_best > 0 else best_days[:20]
@@ -658,7 +928,7 @@ with tab3:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### Mejores Días vs Medias Móviles")
+        st.markdown("### 🟢 **Mejores Días vs Medias Móviles**")
         
         try:
             valid_best_days = best_days_subset.index.intersection(data.index)
@@ -666,34 +936,14 @@ with tab3:
                 best_above_ma50 = data.loc[valid_best_days, 'Above_MA50'].sum()
                 best_above_ma200 = data.loc[valid_best_days, 'Above_MA200'].sum()
                 
-                ma_data = pd.DataFrame({
-                    'Posición': ['Sobre MA50', 'Bajo MA50', 'Sobre MA200', 'Bajo MA200'],
-                    'Cantidad': [
-                        best_above_ma50,
-                        len(valid_best_days) - best_above_ma50,
-                        best_above_ma200,
-                        len(valid_best_days) - best_above_ma200
-                    ]
-                })
-                
-                fig_ma_best = px.bar(
-                    ma_data[:2],
-                    x='Posición',
-                    y='Cantidad',
-                    color='Posición',
-                    color_discrete_map={'Sobre MA50': '#48bb78', 'Bajo MA50': '#f56565'},
-                    title='Mejores Días vs MA50'
-                )
-                fig_ma_best.update_layout(**plotly_layout, showlegend=False, height=300)
-                st.plotly_chart(fig_ma_best, use_container_width=True)
-                
                 st.markdown(f"""
                 <div class="insight-box">
-                    <p style="color: #ffffff;">
-                        <b>{best_above_ma200}</b> de {len(valid_best_days)} mejores días ocurrieron sobre MA200
+                    <p style="color: #ffffff; font-size: 16px;">
+                        <b>{best_above_ma50}</b> de {len(valid_best_days)} mejores días ocurrieron <b>sobre MA50</b><br>
+                        <b>{best_above_ma200}</b> de {len(valid_best_days)} mejores días ocurrieron <b>sobre MA200</b>
                     </p>
-                    <p style="color: #a0a0a0; font-size: 14px;">
-                        Los mejores días pueden ocurrir tanto en mercados alcistas como bajistas
+                    <p style="color: #a0a0a0; font-size: 14px; margin-top: 10px;">
+                        💡 Los mejores días pueden ocurrir tanto en mercados alcistas como bajistas
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -701,7 +951,7 @@ with tab3:
             st.info("No hay suficientes datos para análisis de MA")
     
     with col2:
-        st.markdown("### Peores Días vs Medias Móviles")
+        st.markdown("### 🔴 **Peores Días vs Medias Móviles**")
         
         try:
             valid_worst_days = worst_days_subset.index.intersection(data.index)
@@ -709,34 +959,14 @@ with tab3:
                 worst_above_ma50 = data.loc[valid_worst_days, 'Above_MA50'].sum()
                 worst_above_ma200 = data.loc[valid_worst_days, 'Above_MA200'].sum()
                 
-                ma_data_worst = pd.DataFrame({
-                    'Posición': ['Sobre MA50', 'Bajo MA50', 'Sobre MA200', 'Bajo MA200'],
-                    'Cantidad': [
-                        worst_above_ma50,
-                        len(valid_worst_days) - worst_above_ma50,
-                        worst_above_ma200,
-                        len(valid_worst_days) - worst_above_ma200
-                    ]
-                })
-                
-                fig_ma_worst = px.bar(
-                    ma_data_worst[:2],
-                    x='Posición',
-                    y='Cantidad',
-                    color='Posición',
-                    color_discrete_map={'Sobre MA50': '#48bb78', 'Bajo MA50': '#f56565'},
-                    title='Peores Días vs MA50'
-                )
-                fig_ma_worst.update_layout(**plotly_layout, showlegend=False, height=300)
-                st.plotly_chart(fig_ma_worst, use_container_width=True)
-                
                 st.markdown(f"""
                 <div class="warning-box">
-                    <p style="color: #ffffff;">
-                        <b>{worst_above_ma200}</b> de {len(valid_worst_days)} peores días ocurrieron sobre MA200
+                    <p style="color: #ffffff; font-size: 16px;">
+                        <b>{worst_above_ma50}</b> de {len(valid_worst_days)} peores días ocurrieron <b>sobre MA50</b><br>
+                        <b>{worst_above_ma200}</b> de {len(valid_worst_days)} peores días ocurrieron <b>sobre MA200</b>
                     </p>
-                    <p style="color: #a0a0a0; font-size: 14px;">
-                        Las caídas pueden ocurrir incluso en tendencias alcistas
+                    <p style="color: #a0a0a0; font-size: 14px; margin-top: 10px;">
+                        ⚠️ Las caídas pueden ocurrir incluso en tendencias alcistas
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -744,7 +974,7 @@ with tab3:
             st.info("No hay suficientes datos para análisis de MA")
     
     # Price chart with extreme days marked
-    st.markdown("### Gráfico de Precios con Días Extremos")
+    st.markdown("### 📊 **Gráfico de Precios con Días Extremos**")
     
     fig_price = go.Figure()
     
@@ -754,12 +984,13 @@ with tab3:
         y=data['Close'],
         mode='lines',
         name='Precio',
-        line=dict(color='#667eea', width=1),
-        hovertemplate='Fecha: %{x}<br>Precio: %{y:.2f}<extra></extra>'
+        line=dict(color='#667eea', width=1.5),
+        hovertemplate='Fecha: %{x}<br>Precio: $%{y:.2f}<extra></extra>'
     ))
     
     # Add moving averages
     if show_ma:
+        ma_colors = {'MA20': '#ffeb3b', 'MA50': '#00bcd4', 'MA100': '#ff9800', 'MA200': '#e91e63'}
         for period in ma_periods:
             if f'MA{period}' in data.columns:
                 ma_data = data[f'MA{period}'].dropna()
@@ -769,8 +1000,9 @@ with tab3:
                         y=ma_data.values,
                         mode='lines',
                         name=f'MA{period}',
-                        line=dict(width=1, dash='dash'),
-                        hovertemplate=f'MA{period}: %{{y:.2f}}<extra></extra>'
+                        line=dict(width=1, dash='dash', color=ma_colors.get(f'MA{period}', '#ffffff')),
+                        opacity=0.7,
+                        hovertemplate=f'MA{period}: $%{{y:.2f}}<extra></extra>'
                     ))
     
     # Mark best days
@@ -781,8 +1013,13 @@ with tab3:
             y=data.loc[valid_best, 'Close'],
             mode='markers',
             name='Mejores Días',
-            marker=dict(color='#48bb78', size=10, symbol='triangle-up'),
-            hovertemplate='Mejor Día<br>Retorno: %{text}<extra></extra>',
+            marker=dict(
+                color='#48bb78',
+                size=12,
+                symbol='triangle-up',
+                line=dict(color='#ffffff', width=1)
+            ),
+            hovertemplate='<b>Mejor Día</b><br>Fecha: %{x}<br>Precio: $%{y:.2f}<br>Retorno: %{text}<extra></extra>',
             text=[f"{best_days_subset[date]*100:.2f}%" for date in valid_best]
         ))
     
@@ -794,8 +1031,13 @@ with tab3:
             y=data.loc[valid_worst, 'Close'],
             mode='markers',
             name='Peores Días',
-            marker=dict(color='#f56565', size=10, symbol='triangle-down'),
-            hovertemplate='Peor Día<br>Retorno: %{text}<extra></extra>',
+            marker=dict(
+                color='#f56565',
+                size=12,
+                symbol='triangle-down',
+                line=dict(color='#ffffff', width=1)
+            ),
+            hovertemplate='<b>Peor Día</b><br>Fecha: %{x}<br>Precio: $%{y:.2f}<br>Retorno: %{text}<extra></extra>',
             text=[f"{worst_days_subset[date]*100:.2f}%" for date in valid_worst]
         ))
     
@@ -815,6 +1057,7 @@ with tab3:
         paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='#ffffff', family='Inter'),
         xaxis=dict(
+            title='Fecha',
             gridcolor='rgba(255,255,255,0.05)',
             zerolinecolor='rgba(255,255,255,0.1)'
         ),
@@ -824,28 +1067,90 @@ with tab3:
             font_size=14,
             font_family='Inter'
         ),
-        title=f'{ticker} Precio con Días Extremos',
-        xaxis_title='Fecha',
-        height=500
+        title=dict(
+            text=f'<b>{ticker}</b> - Precio con Días Extremos',
+            font=dict(size=20, color='#ffffff'),
+            x=0.5,
+            xanchor='center'
+        ),
+        height=500,
+        showlegend=True,
+        legend=dict(
+            bgcolor='rgba(26, 31, 46, 0.8)',
+            bordercolor='rgba(102, 126, 234, 0.2)',
+            borderwidth=1
+        )
     )
     
     st.plotly_chart(fig_price, use_container_width=True)
 
-# Summary section
+# Conclusions section
 st.markdown("---")
 
+# Calculate impacts
+buy_hold_value = dollar_scenarios.get('Comprar y Mantener', pd.Series([initial_investment])).iloc[-1]
+cost_of_missing_best = 0
+gain_of_missing_worst = 0
+
 if f'Perdiendo {exclude_best} Mejores Días' in dollar_scenarios:
-    cost_of_missing = dollar_scenarios['Comprar y Mantener'].iloc[-1] - dollar_scenarios[f'Perdiendo {exclude_best} Mejores Días'].iloc[-1]
+    cost_of_missing_best = buy_hold_value - dollar_scenarios[f'Perdiendo {exclude_best} Mejores Días'].iloc[-1]
+
+if f'Perdiendo {exclude_worst} Peores Días' in dollar_scenarios:
+    gain_of_missing_worst = dollar_scenarios[f'Perdiendo {exclude_worst} Peores Días'].iloc[-1] - buy_hold_value
+
+# Show conclusions if any days are excluded
+if exclude_best > 0 or exclude_worst > 0:
+    st.markdown(f"""
+    <div class="success-box pulse" style="margin-top: 30px;">
+        <h2 style="text-align: center; color: #48bb78; font-size: 32px;">🎯 Conclusiones Clave</h2>
+    """, unsafe_allow_html=True)
+    
+    if exclude_best > 0:
+        st.markdown(f"""
+        <p style="text-align: center; color: #ffffff; font-size: 20px; margin: 15px 0;">
+            Perder los <b>{exclude_best} mejores días</b> te habría costado 
+            <b style="color: #f56565; font-size: 24px;">${cost_of_missing_best:,.0f}</b>
+        </p>
+        """, unsafe_allow_html=True)
+    
+    if exclude_worst > 0:
+        st.markdown(f"""
+        <p style="text-align: center; color: #ffffff; font-size: 20px; margin: 15px 0;">
+            Evitar los <b>{exclude_worst} peores días</b> te habría dado 
+            <b style="color: #48bb78; font-size: 24px;">+${gain_of_missing_worst:,.0f}</b> extra
+        </p>
+        """, unsafe_allow_html=True)
+    
+    if exclude_best > 0 and exclude_worst > 0:
+        combined_value = dollar_scenarios.get(f'Perdiendo {exclude_best} Mejores y {exclude_worst} Peores', pd.Series([initial_investment])).iloc[-1]
+        combined_diff = combined_value - buy_hold_value
+        if combined_diff > 0:
+            st.markdown(f"""
+            <p style="text-align: center; color: #ffffff; font-size: 20px; margin: 15px 0;">
+                Perder ambos (mejores y peores): 
+                <b style="color: #9f7aea; font-size: 24px;">+${combined_diff:,.0f}</b>
+            </p>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <p style="text-align: center; color: #ffffff; font-size: 20px; margin: 15px 0;">
+                Perder ambos (mejores y peores): 
+                <b style="color: #f56565; font-size: 24px;">${combined_diff:,.0f}</b>
+            </p>
+            """, unsafe_allow_html=True)
     
     st.markdown(f"""
-    <div class="success-box" style="margin-top: 30px;">
-        <h2 style="text-align: center; color: #48bb78;">Conclusiones Clave</h2>
-        <p style="text-align: center; color: #ffffff; font-size: 18px;">
-            Perder solo {exclude_best} mejores días te habría costado <b>${cost_of_missing:,.0f}</b>
-        </p>
-        <p style="text-align: center; color: #a0a0a0;">
-            El tiempo en el mercado supera al timing del mercado.
-        </p>
+        <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; margin-top: 30px;">
+            <p style="text-align: center; color: #ffffff; font-size: 18px; margin: 0;">
+                <b>⚡ La Verdad Incómoda:</b>
+            </p>
+            <p style="text-align: center; color: #a0a0a0; font-size: 16px; margin-top: 10px;">
+                El timing perfecto es <b>imposible</b>. Los mejores y peores días ocurren cerca unos de otros.<br>
+                <span style="color: #48bb78; font-size: 18px; font-weight: 600;">
+                    El tiempo en el mercado supera al timing del mercado.
+                </span>
+            </p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 else:
@@ -861,14 +1166,13 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-# Footer
+# Footer with enhanced styling
+st.markdown("---")
 st.markdown("""
 <div class="footer">
-    <p>Hecho con 📈 por <a href="https://twitter.com/Gsnchez" target="_blank">@Gsnchez</a> | 
-    <a href="https://bquantfinance.com" target="_blank">bquantfinance.com</a></p>
-    <p style="font-size: 12px; color: #666;">
-    Solo con fines educativos. No es asesoramiento de inversión. El rendimiento pasado no garantiza resultados futuros.<br>
-    Nota: Análisis basado en datos históricos del ticker actual. El sesgo de supervivencia puede afectar backtests a largo plazo.
+    <p style="font-size: 18px;">
+        Hecho con 📈 por <a href="https://twitter.com/Gsnchez" target="_blank">@Gsnchez</a> | 
+        <a href="https://bquantfinance.com" target="_blank">bquantfinance.com</a>
     </p>
 </div>
 """, unsafe_allow_html=True)
