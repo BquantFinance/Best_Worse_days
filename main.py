@@ -1138,21 +1138,6 @@ if exclude_best > 0 or exclude_worst > 0:
                 <b style="color: #f56565; font-size: 24px;">${combined_diff:,.0f}</b>
             </p>
             """, unsafe_allow_html=True)
-    
-    st.markdown(f"""
-        <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px; margin-top: 30px;">
-            <p style="text-align: center; color: #ffffff; font-size: 18px; margin: 0;">
-                <b>⚡ La Verdad Incómoda:</b>
-            </p>
-            <p style="text-align: center; color: #a0a0a0; font-size: 16px; margin-top: 10px;">
-                El timing perfecto es <b>imposible</b>. Los mejores y peores días ocurren cerca unos de otros.<br>
-                <span style="color: #48bb78; font-size: 18px; font-weight: 600;">
-                    El tiempo en el mercado supera al timing del mercado.
-                </span>
-            </p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 else:
     st.markdown(f"""
     <div class="success-box" style="margin-top: 30px;">
